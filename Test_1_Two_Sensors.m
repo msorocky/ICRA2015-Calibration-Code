@@ -28,8 +28,8 @@ clear sensorType;
 clear sensorData;
 
 %% process velodyne
-load('kittiVelData.mat');
-sensorData{tformIdx,1} = velData;
+load('kittiVelData.mat'); % data obtained from genKittiVel/genKittiVel.m
+sensorData{tformIdx,1} = velData; % This would be line 2 in the paper's Algorithm 1 
 tformIdx = tformIdx + 1;
 
 %% process nav
@@ -58,8 +58,20 @@ tformIdx = tformIdx + 1;
 
 for i = 1:length(sensorData)
     if(i > 1)
+        % This interpolates transforms from sensor A to match times of
+        % corresponding sensor B transform
+        
+        % matchTforms(sensorA, sensorB, range, addError) -- range is the
+        % timesteps you care about, addError bool for adding noise to each
+        % transformation
         sensorData{i} = matchTforms(sensorData{i}, sensorData{1},range, false);
     else
+        % T_Skm1_Sk is the transformation from the frame of the sensor at 
+        % timestep k-1 to its frame at timestep k; T_Cov_Skm1_Sk is its
+        % associated covariance
+        
+        % T_S1_Sk is the transformation from t = 1 to t = k
+        
         sensorData{i}.T_Skm1_Sk = sensorData{i}.T_Skm1_Sk(range,:);
         sensorData{i}.T_S1_Sk = sensorData{i}.T_S1_Sk(range,:);
         sensorData{i}.T_Cov_Skm1_Sk = sensorData{i}.T_Cov_Skm1_Sk(range,:);
@@ -80,6 +92,11 @@ TErrEqual = zeros(reps,3,size(scansRange(:),1));
 for w = 1:reps
     for s = 1:size(scansRange(:),1)
         %get random contiguous scans to use
+        % scansRange = [10 20 30 40 50] (defined at top of file)
+        
+        % randTforms(sensorData, n) returns n sequential transforms and
+        % their variances, randomly from sensorData 
+        % I.e. at each repetition, we'd have n transforms to use
         sData = randTforms(sensorData, scansRange(s));
 
         %Create equal weighted variance
@@ -88,25 +105,31 @@ for w = 1:reps
             sDataE{i}.T_Cov_Skm1_Sk = ones(size(sData{1}.T_Cov_Skm1_Sk));
         end
 
-        %find equal weighted results
-        rotVec = roughR(sDataE);
+        % Give a coarse estimate of R and t using sensor data sDataE
+        % (weighting variances equally) - lines 5, 8 in Algorithm 1
+        rotVec = roughR(sDataE); 
         tranVec = roughT(sDataE, rotVec);
 
         %write out results
         RErrEqual(w,:,s) = rotVec(2,:);
         TErrEqual(w,:,s) = tranVec(2,:);
 
-        %find rotation
+        %find rotation, now using variances previously obtained from sensor readings
         rotVec = roughR(sData);
         sData = findInR(sData, rotVec);
-        rotVec = optR(sData, rotVec);
+        % Refines initial guess of rotVec - this would be line 7 of
+        % Algorithm 1
+        rotVec = optR(sData, rotVec); 
         
-        %find translation
+        %find translation, now using variances obtained from sensor readings
         tranVec = roughT(sData, rotVec);
         sData = findInT(sData, tranVec, rotVec);
+        
+        % Refines initial guess of tranVec - this would be line 7 of
+        % Algorithm 1
         tranVec = optT(sData, tranVec, rotVec);
 
-        %bootstrap
+        %bootstrap - line 10 in Algorithm 1
         [tranVar, rotVar] = bootTform(sData, tranVec, rotVec, bootNum);
 
         %write out results

@@ -34,14 +34,16 @@ for b = 2:size(sensorData,1)
         ta = zeros(3*s,1);
 
         for j = 1:s
+            % Left side of eqn 7
             Rb(3*j-2:3*j,1:3) = vec2rot(sensorData{b}.T_Skm1_Sk(j,4:6)') - eye(3);
             Rb(3*j-2:3*j,:) = weight(j).* Rb(3*j-2:3*j,:);
-
+    
+            % Right side of eqn 7
             ta(3*j-2:3*j) = RMat(:,:,b)*sensorData{1}.T_Skm1_Sk(j,1:3)' - sensorData{b}.T_Skm1_Sk(j,1:3)';
             ta(3*j-2:3*j) = weight(j).* ta(3*j-2:3*j);
         end
     end
-
+    
     temp = (Rb\ta);
     %temp = RMat(:,:,b)'*temp(1:3);
     estVecT(b,:) = temp(1:3)';

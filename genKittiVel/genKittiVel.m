@@ -10,7 +10,7 @@ velData.help = ['velData stores the following information:\n'...
 'help- this information...'...
 'T_Skm1_Sk- the transformation from the frame of the sensor at timestep k-1 to its frame at timestep k\n'];
 
-velData.folder = [kittiPath 'velodyne_points\data\'];
+velData.folder = [kittiPath 'velodyne_points/data/'];
 
 velData.files = dir([velData.folder,'*.txt']);
 
@@ -26,7 +26,7 @@ velData.T_Skm1_Sk(1,:) = tran2vec(eye(4));
 velData.T_Cov_Skm1_Sk = zeros(size(velData.files(:),1),6);
 velData.T_Cov_Skm1_Sk(1,:) = inf(1,6);
 
-[velData.time, velData.timeStart, velData.timeStop] = ReadKittiTimestamps([velData.folder '..\']);
+[velData.time, velData.timeStart, velData.timeStop] = ReadKittiTimestamps([velData.folder '../']);
 velData.time = velData.time(range);
 velData.timeStart = velData.timeStart(range);
 velData.timeStop = velData.timeStop(range);

@@ -18,13 +18,13 @@ camData.help = help;
 %set destination folder
 switch idx
     case 1
-        camData.folder = [kittiPath 'image_00\data\'];
+        camData.folder = [kittiPath 'image_00/data/'];
     case 2
-        camData.folder = [kittiPath 'image_01\data\'];
+        camData.folder = [kittiPath 'image_01/data/'];
     case 3
-        camData.folder = [kittiPath 'image_02\data\'];
+        camData.folder = [kittiPath 'image_02/data/'];
     case 4
-        camData.folder = [kittiPath 'image_03\data\'];
+        camData.folder = [kittiPath 'image_03/data/'];
     otherwise
 end
 
@@ -60,7 +60,7 @@ end
     camData.T_Cov_Skm1_Sk = zeros(size(camData.files(:),1),6);
     camData.T_Cov_Skm1_Sk(1,:) = inf(1,6);
     
-    camData.time = ReadKittiTimestamps([camData.folder,'..\']);
+    camData.time = ReadKittiTimestamps([camData.folder,'../']);
     camData.time = camData.time(range);
     
     camData.type = 'camera';
@@ -96,7 +96,7 @@ end
         try
             [camData.T_Skm1_Sk(frame,:), camData.T_Cov_Skm1_Sk(frame,:)] = getTcam(image, imageOld, [], ones(size(image)), camData.K,50000);
         catch
-            camData.T_Skm1_Sk(frame,:) = [0,0,0,0,0,0,0];
+            camData.T_Skm1_Sk(frame,:) = [0,0,0,0,0,0];
             camData.T_Cov_Skm1_Sk(frame,:) = 1000*ones(1,6);
         end
         

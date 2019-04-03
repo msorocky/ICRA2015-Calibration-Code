@@ -31,13 +31,4 @@ for i = 1:size(sensorData,1)
     sensorData{i}.T_Skm1_Sk = sensorData{i}.T_Skm1_Sk(keep,:);
     sensorData{i}.T_Cov_Skm1_Sk = sensorData{i}.T_Cov_Skm1_Sk(keep,:);
 end
-for i = 1:size(sensorData,1)
 
-    if size(sensorData{i}.T_Cov_Skm1_Sk, 1) == 0
-
-        sensorData{i}.T_Skm1_Sk = [0 0 0 0 0 0];
-        sensorData{i}.T_Cov_Skm1_Sk = 100*[1 1 1 1 1 1];
-        disp('none')
-
-    end
-end

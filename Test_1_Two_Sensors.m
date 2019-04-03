@@ -6,15 +6,13 @@
 %% user set variables
 
 %data range (start excluded as not all sensors running)
-range = 10:1109;
+range = 10:100;
 
 %number of scans to use
-% scansRange = 50:50:1000;
-scansRange = 20:20:400;
+scansRange = 10:10:50;
 
-%scansRange = [10 20 30 40 50];
 %number of times to perform test
-reps = 100;
+reps = 5;
 
 %number of bootstrap iterations to perform
 bootNum = 100;
@@ -101,7 +99,7 @@ for w = 1:reps
         % I.e. at each repetition, we'd have n transforms to use
         sData = randTforms(sensorData, scansRange(s));
 
-        %Create equal weighted variance for every T
+        %Create equal weighted variance
         sDataE = sData;
         for i = 1:size(sData,1)
             sDataE{i}.T_Cov_Skm1_Sk = ones(size(sData{1}.T_Cov_Skm1_Sk));
@@ -109,7 +107,6 @@ for w = 1:reps
 
         % Give a coarse estimate of R and t using sensor data sDataE
         % (weighting variances equally) - lines 5, 8 in Algorithm 1
-        % Uses Kabsch algorithm to find optimal R
         rotVec = roughR(sDataE); 
         tranVec = roughT(sDataE, rotVec);
 
@@ -133,15 +130,15 @@ for w = 1:reps
         tranVec = optT(sData, tranVec, rotVec);
 
         %bootstrap - line 10 in Algorithm 1
-        %[tranVar, rotVar] = bootTform(sData, tranVec, rotVec, bootNum);
+        [tranVar, rotVar] = bootTform(sData, tranVec, rotVec, bootNum);
 
         %write out results
         RErr(w,:,s) = rotVec(2,:);
         TErr(w,:,s) = tranVec(2,:);
-%         RVar(w,:,s) = rotVar(2,:);
-%         TVar(w,:,s) = tranVar(2,:);
+        RVar(w,:,s) = rotVar(2,:);
+        TVar(w,:,s) = tranVar(2,:);
 
-        %fprintf('R = [% 1.3f,% 1.3f,% 1.3f], T = [% 3.2f,% 3.2f,% 3.2f] using %4i scans, iteration = %i\n',rotVec(2,1),rotVec(2,2),rotVec(2,3),tranVec(2,1),tranVec(2,2),tranVec(2,3),scansRange(s),w);
+        fprintf('R = [% 1.3f,% 1.3f,% 1.3f], T = [% 3.2f,% 3.2f,% 3.2f] using %4i scans, iteration = %i\n',rotVec(2,1),rotVec(2,2),rotVec(2,3),tranVec(2,1),tranVec(2,2),tranVec(2,3),scansRange(s),w);
 
         save('Test_1_Res.mat', 'RErr', 'TErr', 'RVar', 'TVar', 'RErrEqual', 'TErrEqual');
     end

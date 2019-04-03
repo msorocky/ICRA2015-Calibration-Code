@@ -3,7 +3,7 @@ function [ sensorData ] = randTforms( sensorData, num )
 
 %get random index to use for scans
 idx = randi(size(sensorData{1}.T_Skm1_Sk,1)-num-1)+1;
-.idx = (idx:idx+num)';
+idx = (idx:idx+num)';
 
 %get corrosponding transformations
 for i = 1:size(sensorData,1)

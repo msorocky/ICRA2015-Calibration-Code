@@ -1,7 +1,6 @@
-clc;
 load('Test_1_Res.mat');
 
-% addAll();
+% clearaddAll();
 
 %convert from position to error
 actualR = [-0.0148243143349357,0.00203019194952995,0.000770383764607292];
@@ -24,9 +23,9 @@ TErrEqual = mean(abs(TErrEqual),1);
 TErrEqual = reshape(TErrEqual,3,size(TErrEqual,3))';
 
 RVar = mean(RVar,1);
-RVar = reshape(RVar,3,20)';  % change 20 to 5
+RVar = reshape(RVar,3,20)';
 TVar = mean(TVar,1);
-TVar = reshape(TVar,3,20)';  % change 20 to 5
+TVar = reshape(TVar,3,20)';
 
 %convert to angular error in degrees
 for i = 1:20
@@ -47,7 +46,7 @@ end
 
 TVar = sqrt(TVar);
 
-x = (50:50:1000)';   % 1000 ->250
+x = (50:50:1000)';
 
 addpath('./plotBounds');
 

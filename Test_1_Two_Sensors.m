@@ -4,12 +4,13 @@
 % weighted least squares method
 
 %% user set variables
-
+clear;
+clc;
 %data range (start excluded as not all sensors running)
-range = 10:100;
+range = 10:1800;
 
 %number of scans to use
-scansRange = 10:10:50;
+scansRange = 10:10:1500;
 
 %number of times to perform test
 reps = 5;
@@ -143,3 +144,4 @@ for w = 1:reps
         save('Test_1_Res.mat', 'RErr', 'TErr', 'RVar', 'TVar', 'RErrEqual', 'TErrEqual');
     end
 end
+        fprintf('Finish computing\n');

@@ -28,12 +28,12 @@ clear sensorType;
 clear sensorData;
 
 %% process velodyne
-load('kittiVelData.mat'); % data obtained from genKittiVel/genKittiVel.m
+load('zeusVelData.mat'); % data obtained from genKittiVel/genKittiVel.m
 sensorData{tformIdx,1} = velData; % This would be line 2 in the paper's Algorithm 1 
 tformIdx = tformIdx + 1;
 
 %% process nav
-load('kittiNavData.mat');
+load('zeusNavData.mat');
 sensorData{tformIdx,1} = navData;
 tformIdx = tformIdx + 1;
 

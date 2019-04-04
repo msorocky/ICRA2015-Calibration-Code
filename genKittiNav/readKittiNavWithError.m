@@ -11,12 +11,13 @@ fclose(fid);
 t = [in(1) in(2) in(3)];
 
 % Quaternion 
-q = [in(4) in(5) in(6) in(7)];
+q = [in(7) in(4) in(5) in(6)];
 
 R = quat2rotm(q);
-
+tformMat = eye(4);
 tformMat(1:3,1:3)  = R;
 tformMat(1:3,4) = t;
+
 
 cov_vec = zeros(36,1);
 
@@ -24,6 +25,8 @@ for k = 1 : 36
     cov_vec(k) = in(7+k);
 end
 
-tformCov = reshape(cov_vec, [6, 6])';
+Cov = reshape(cov_vec, [6, 6])';
+
+tformCov = diag(Cov);
 
 end

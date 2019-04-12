@@ -7,13 +7,13 @@
 clear;
 clc;
 %data range (start excluded as not all sensors running)
-range = 10:1800;
+range = 10:1000;
 
 %number of scans to use
-scansRange = 10:10:1500;
+scansRange = 10:50:800;
 
 %number of times to perform test
-reps = 5;
+reps = 20;
 
 %number of bootstrap iterations to perform
 bootNum = 100;
@@ -29,7 +29,7 @@ clear sensorType;
 clear sensorData;
 
 %% process velodyne
-load('zeusVelData.mat'); % data obtained from genKittiVel/genKittiVel.m
+load('zeusVelData.mat');          % data obtained from genKittiVel/genKittiVel.m
 sensorData{tformIdx,1} = velData; % This would be line 2 in the paper's Algorithm 1 
 tformIdx = tformIdx + 1;
 
@@ -60,8 +60,7 @@ tformIdx = tformIdx + 1;
 for i = 1:length(sensorData)
     if(i > 1)
         % This interpolates transforms from sensor A to match times of
-        % corresponding sensor B transform
-        
+        % corresponding sensor B transform      
         % matchTforms(sensorA, sensorB, range, addError) -- range is the
         % timesteps you care about, addError bool for adding noise to each
         % transformation
@@ -70,9 +69,7 @@ for i = 1:length(sensorData)
         % T_Skm1_Sk is the transformation from the frame of the sensor at 
         % timestep k-1 to its frame at timestep k; T_Cov_Skm1_Sk is its
         % associated covariance
-        
         % T_S1_Sk is the transformation from t = 1 to t = k
-        
         sensorData{i}.T_Skm1_Sk = sensorData{i}.T_Skm1_Sk(range,:);
         sensorData{i}.T_S1_Sk = sensorData{i}.T_S1_Sk(range,:);
         sensorData{i}.T_Cov_Skm1_Sk = sensorData{i}.T_Cov_Skm1_Sk(range,:);
@@ -106,7 +103,7 @@ for w = 1:reps
             sDataE{i}.T_Cov_Skm1_Sk = ones(size(sData{1}.T_Cov_Skm1_Sk));
         end
 
-        % Give a coarse estimate of R and t using sensor data sDataE
+        % Give a coarse estimate of R and T using sensor data sDataE
         % (weighting variances equally) - lines 5, 8 in Algorithm 1
         rotVec = roughR(sDataE); 
         tranVec = roughT(sDataE, rotVec);
@@ -141,7 +138,7 @@ for w = 1:reps
 
         fprintf('R = [% 1.3f,% 1.3f,% 1.3f], T = [% 3.2f,% 3.2f,% 3.2f] using %4i scans, iteration = %i\n',rotVec(2,1),rotVec(2,2),rotVec(2,3),tranVec(2,1),tranVec(2,2),tranVec(2,3),scansRange(s),w);
 
-        save('Test_1_Res.mat', 'RErr', 'TErr', 'RVar', 'TVar', 'RErrEqual', 'TErrEqual');
+        save('Test_1_Res.mat', 'RErr', 'TErr', 'RVar', 'TVar', 'RErrEqual', 'TErrEqual','scansRange');
     end
 end
         fprintf('Finish computing\n');

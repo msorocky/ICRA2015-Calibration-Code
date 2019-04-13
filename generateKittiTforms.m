@@ -8,7 +8,7 @@
 kittiPath = '/home/william/Desktop/MR/ICRA2015-Calibration-Code/rawData/';
 
 %Sets if the sensor transforms will be plotted
-plotTforms = false;
+plotTforms = true;
 
 %Setup folders
 addAll();
@@ -19,9 +19,9 @@ addAll();
 parfor i = 1:6
 % for i=1:6
     switch i
-        case 1
-            kittiVelData = genKittiVel(kittiPath, plotTforms, []);
-            parsave('zeusVelData.mat', kittiVelData, 'velData');
+%         case 1
+%             kittiVelData = genKittiVel(kittiPath, plotTforms, []);
+%             parsave('zeusVelData.mat', kittiVelData, 'velData');
 %         case 2
 %             kittiCamData = genKittiCam(kittiPath, plotTforms, [], 2);
 %             parsave('kittiCam2Data.mat', kittiCamData, 'cam2Data');

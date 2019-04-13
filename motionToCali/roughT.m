@@ -43,7 +43,7 @@ for b = 2:size(sensorData,1)
     end
 
     temp = (Rb\ta);
-    %temp = RMat(:,:,b)'*temp(1:3);
+%    temp = RMat(:,:,b)'*temp(1:3);
     estVecT(b,:) = temp(1:3)';
 end
 

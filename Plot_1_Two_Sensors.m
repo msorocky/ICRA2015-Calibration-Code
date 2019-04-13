@@ -8,7 +8,7 @@ len=length(scansRange);
 len1=length(scansRange1);
 % groundtruth IMU to Vel
 actualT = [0.000, 0.046, 0.399];
-actualR = [0.000, -0.000, 1.571];
+actualR = [0.000, 0.000, 1.571];
 
 % groundtruth Vel to IMU
 % actualT = [-0.046, 0.000, -0.399];
@@ -30,6 +30,8 @@ RErrEqual = reshape(RErrEqual,3,size(RErrEqual,3))';
 TErrEqual = mean(abs(TErrEqual),1);
 TErrEqual = reshape(TErrEqual,3,size(TErrEqual,3))';
 
+% deal with the variance 
+%
 RVar = mean(RVar,1);
 RVar = reshape(RVar,3,len)';  % change 
 TVar = mean(TVar,1);
@@ -72,6 +74,7 @@ ylabel('Roll');
 axis([10 scansRange(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
+grid on
 
 subplot(3,1,2);
 boundedline(x,RErr(:,2),RVar(:,2),'o-g');
@@ -80,6 +83,7 @@ ylabel('Pitch');
 axis([10 scansRange(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
+grid on
 
 subplot(3,1,3);
 boundedline(x,RErr(:,3),RVar(:,3),'o-b');
@@ -89,6 +93,7 @@ xlabel('Number of Sensor Readings');
 axis([10 scansRange(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
+grid on 
 
 figure
 hold on;
@@ -100,6 +105,7 @@ ylabel('X');
 axis([10 scansRange(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
+grid on
 
 subplot(3,1,2);
 boundedline(x_T,TErr(:,2),TVar(:,2),'o-g');
@@ -108,6 +114,7 @@ ylabel('Y');
 axis([10 scansRange(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
+grid on
 
 subplot(3,1,3);
 boundedline(x_T,TErr(:,3),TVar(:,3),'o-b');
@@ -117,6 +124,6 @@ xlabel('Number of Sensor Readings');
 axis([10 scansRange(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
-
+grid on
 
 

@@ -11,9 +11,10 @@ range = 10:1000;
 
 %number of scans to use
 scansRange = 10:50:800;
+scansRange1 = 10:50:800;
 
 %number of times to perform test
-reps = 20;
+reps = 1;
 
 %number of bootstrap iterations to perform
 bootNum = 100;
@@ -138,7 +139,7 @@ for w = 1:reps
 
         fprintf('R = [% 1.3f,% 1.3f,% 1.3f], T = [% 3.2f,% 3.2f,% 3.2f] using %4i scans, iteration = %i\n',rotVec(2,1),rotVec(2,2),rotVec(2,3),tranVec(2,1),tranVec(2,2),tranVec(2,3),scansRange(s),w);
 
-        save('Test_1_Res.mat', 'RErr', 'TErr', 'RVar', 'TVar', 'RErrEqual', 'TErrEqual','scansRange');
+        save('Test_1_Res.mat', 'RErr', 'TErr', 'RVar', 'TVar', 'RErrEqual', 'TErrEqual','scansRange','scansRange1');
     end
 end
         fprintf('Finish computing\n');

@@ -5,6 +5,7 @@ load('Test_1_Res.mat');
 
 %convert from position to error
 len=length(scansRange);
+len1=length(scansRange1);
 % groundtruth IMU to Vel
 actualT = [0.000, 0.046, 0.399];
 actualR = [0.000, -0.000, 1.571];
@@ -32,7 +33,7 @@ TErrEqual = reshape(TErrEqual,3,size(TErrEqual,3))';
 RVar = mean(RVar,1);
 RVar = reshape(RVar,3,len)';  % change 
 TVar = mean(TVar,1);
-TVar = reshape(TVar,3,len)';  % change 
+TVar = reshape(TVar,3,len1)';  % change 
 
 %convert to angular error in degrees
 % for i = 1:len
@@ -54,6 +55,8 @@ TVar = reshape(TVar,3,len)';  % change
 TVar = sqrt(TVar);
 
 x = scansRange';   % 1000 ->250
+x_T = scansRange1';   % 1000 ->250
+
 
 addpath('./plotBounds');
 
@@ -91,7 +94,7 @@ figure
 hold on;
 
 subplot(3,1,1);
-boundedline(x,TErr(:,1),TVar(:,1),'o-r');
+boundedline(x_T,TErr(:,1),TVar(:,1),'o-r');
 plot(x,TErrEqual(:,1),'x-k');
 ylabel('X');
 axis([10 scansRange(len) 0 1]);
@@ -99,7 +102,7 @@ set(gca,'layer','top');
 set(gcf,'color','w');
 
 subplot(3,1,2);
-boundedline(x,TErr(:,2),TVar(:,2),'o-g');
+boundedline(x_T,TErr(:,2),TVar(:,2),'o-g');
 plot(x,TErrEqual(:,2),'x-k');
 ylabel('Y');
 axis([10 scansRange(len) 0 1]);
@@ -107,7 +110,7 @@ set(gca,'layer','top');
 set(gcf,'color','w');
 
 subplot(3,1,3);
-boundedline(x,TErr(:,3),TVar(:,3),'o-b');
+boundedline(x_T,TErr(:,3),TVar(:,3),'o-b');
 plot(x,TErrEqual(:,3),'x-k');
 ylabel('Z');
 xlabel('Number of Sensor Readings');

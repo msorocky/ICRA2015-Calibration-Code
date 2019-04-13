@@ -1,4 +1,4 @@
-function [ tranVar, rotVar ] = bootTform( sensorData, tranVec, rotVec, numBoot )
+function [ tranVar, rotVar, weight ] = bootTform( sensorData, tranVec, rotVec, numBoot )
 %BOOTTFORM bootstraps data to find varinace
 
     tranVar = zeros(size(tranVec,1),3,numBoot);
@@ -14,7 +14,7 @@ function [ tranVar, rotVar ] = bootTform( sensorData, tranVec, rotVec, numBoot )
             sensorDataB{j}.T_Cov_Skm1_Sk = sensorData{j}.T_Cov_Skm1_Sk(bootIdx,:);
         end
 
-        rotVar(:,:,i) = roughR(sensorDataB);
+        [rotVar(:,:,i), weight] = roughR(sensorDataB);
         tranVar(:,:,i) = roughT(sensorDataB, rotVar(:,:,i));
         
         %rotVar(:,:,i) = optR(sensorDataB, rotVec);

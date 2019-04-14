@@ -14,7 +14,7 @@ scansRange = 10:100:1600;
 scansRange1 = 10:100:1600;
 
 %number of times to perform test
-reps = 25;
+reps = 2;
 
 %number of bootstrap iterations to perform
 bootNum = 100;

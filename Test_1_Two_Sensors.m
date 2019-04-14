@@ -130,22 +130,21 @@ for w = 1:reps
         tranVec = optT(sData, tranVec, rotVec);
 
         %bootstrap - line 10 in Algorithm 1
-        [tranVar, rotVar] = bootTform(sData, tranVec, rotVec, bootNum);
+%       [tranVar, rotVar] = bootTform(sData, tranVec, rotVec, bootNum);
 
         %write out results
         RErr(w,:,s) = rotVec(2,:);
         TErr(w,:,s) = tranVec(2,:);
-        RVar(w,:,s) = rotVar(2,:);
-        TVar(w,:,s) = tranVar(2,:);
+%         RVar(w,:,s) = rotVar(2,:);
+%         TVar(w,:,s) = tranVar(2,:);
 
         fprintf('R = [% 1.3f,% 1.3f,% 1.3f], T = [% 3.2f,% 3.2f,% 3.2f] using %4i scans, iteration = %i\n',rotVec(2,1),rotVec(2,2),rotVec(2,3),tranVec(2,1),tranVec(2,2),tranVec(2,3),scansRange(s),w);
 
-<<<<<<< Updated upstream
+
         save('Test_1_Res.mat', 'RErr', 'TErr', 'RVar', 'TVar', 'RErrEqual', 'TErrEqual','scansRange','scansRange1');
-=======
-        save('Test_1_Res.mat', 'RErr', 'TErr', 'RVar', 'TVar', 'RErrEqual', 'TErrEqual','scansRange');
-        %save('Test_1_Res.mat', 'RErr', 'TErr', 'RErrEqual', 'TErrEqual','scansRange');
->>>>>>> Stashed changes
+
+   
+
     end
 end
         fprintf('Finish computing\n');

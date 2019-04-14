@@ -53,24 +53,25 @@ for a = 1:s
                     continue;
                     
                 else                   
-                    err = -estAB' - estB;
-                    
-                    temp = sum(err.*estA)./sum(estA.^2);
-                    temp = repmat(temp,3,1);
-                    
-                    VA = VA.*abs(temp);
-                    err = err - temp.*estA;  
+%                     err = -estAB' - estB;
+%                     
+%                     temp = sum(err.*estA)./sum(estA.^2);
+%                     temp = repmat(temp,3,1);
+%                     
+%                     VA = VA.*abs(temp);
+%                     err = err - temp.*estA;  
                 end
                 
             elseif(strcmp(sensorData{b}.type,'camera'))               
-                err = -estAB' - estA;
-                
-                temp = sum(err.*estB)./sum(estB.^2);
-                temp = repmat(temp,3,1);
-                
-                VB = VB.*abs(temp);
-                err = err - temp.*estB;    
+%                 err = -estAB' - estA;
+%                 
+%                 temp = sum(err.*estB)./sum(estB.^2);
+%                 temp = repmat(temp,3,1);
+%                 
+%                 VB = VB.*abs(temp);
+%                 err = err - temp.*estB;    
             else
+% IMU to Vel
                 err = estAB' + estA + estB;
             end
             
@@ -81,8 +82,8 @@ for a = 1:s
                 err(k,:) = abs(err(k,:)) ./ sqrt(diag(V))'; 
             end
             
-%             keep(any(err > 1,2)) = false;
-            keep(any(err > 0.145,2)) = false;
+             keep(any(err > 1,2)) = false;
+%            keep(any(err > 0.01,2)) = false;
             
         end
     end

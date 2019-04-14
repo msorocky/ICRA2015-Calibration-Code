@@ -2,7 +2,7 @@ clc;
 load('Test_1_Res.mat');
 
 % addAll();
-
+close all;
 %convert from position to error
 len=length(scansRange);
 len1=length(scansRange1);

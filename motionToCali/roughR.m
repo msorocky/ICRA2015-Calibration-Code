@@ -1,4 +1,4 @@
-function [ estVec ] = roughR( sensorData )
+function [ estVec, weight ] = roughR( sensorData )
 %ROUGHR finds an approximation to R using weighted least squares
 
 estVec = zeros(size(sensorData,1),3);

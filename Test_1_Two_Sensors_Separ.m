@@ -30,8 +30,8 @@ clear sensorType;
 clear sensorData;
 
 %% process velodyne
-load('zeusVelData.mat');             % data obtained from genKittiVel/genKittiVel.m
-sensorData{tformIdx,1} = velData;    % This would be line 2 in the paper's Algorithm 1 
+load('zeusVelData.mat');          % data obtained from genKittiVel/genKittiVel.m
+sensorData{tformIdx,1} = velData; % This would be line 2 in the paper's Algorithm 1 
 tformIdx = tformIdx + 1;
 
 %% process nav
@@ -65,7 +65,7 @@ for i = 1:length(sensorData)
         % matchTforms(sensorA, sensorB, range, addError) -- range is the
         % timesteps you care about, addError bool for adding noise to each
         % transformation
-        sensorData{i} = matchTforms(sensorData{i}, sensorData{1}, range, false);
+        sensorData{i} = matchTforms(sensorData{i}, sensorData{1},range, false);
     else
         % T_Skm1_Sk is the transformation from the frame of the sensor at 
         % timestep k-1 to its frame at timestep k; T_Cov_Skm1_Sk is its
@@ -80,18 +80,20 @@ for i = 1:length(sensorData)
 end
 
 RErr = zeros(reps,3,size(scansRange(:),1));
-TErr = zeros(reps,3,size(scansRange(:),1));
+TErr = zeros(reps,3,size(scansRange1(:),1));
 
 RVar = zeros(reps,3,size(scansRange(:),1));
-TVar = zeros(reps,3,size(scansRange(:),1));
+TVar = zeros(reps,3,size(scansRange1(:),1));
 
 RErrEqual = zeros(reps,3,size(scansRange(:),1));
 TErrEqual = zeros(reps,3,size(scansRange(:),1));
-
+%TODO: Initialize SData_T
+% sData_T = [];
 for w = 1:reps
     for s = 1:size(scansRange(:),1)
         %get random contiguous scans to use
         % scansRange = [10 20 30 40 50] (defined at top of file)
+        
         % randTforms(sensorData, n) returns n sequential transforms and
         % their variances, randomly from sensorData 
         % I.e. at each repetition, we'd have n transforms to use
@@ -105,22 +107,47 @@ for w = 1:reps
 
         % Give a coarse estimate of R and T using sensor data sDataE
         % (weighting variances equally) - lines 5, 8 in Algorithm 1
-        rotVec = roughR(sDataE); 
-
-        tranVec = roughT(sDataE, rotVec);
+        rotVec = roughR(sDataE);
+        
 
         %write out results
         RErrEqual(w,:,s) = rotVec(2,:);
-        TErrEqual(w,:,s) = tranVec(2,:);
 
         %find rotation, now using variances previously obtained from sensor readings
         rotVec = roughR(sData);
-
         sData = findInR(sData, rotVec);
         % Refines initial guess of rotVec - this would be line 7 of
         % Algorithm 1
-        rotVec = optR(sData, rotVec); 
+        rotVec = optR(sData, rotVec);
+        
+        tranVec = roughT(sDataE, rotVec);
+        TErrEqual(w,:,s) = tranVec(2,:);
+        
+        %bootstrap - line 10 in Algorithm 1
+        [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec, bootNum);
+%         TODO: Store SData into sData_T so the exact same trajectory will be used for Translation
+%         sData_T = 
+        
+        RErr(w,:,s) = rotVec(2,:);
+        RVar(w,:,s) = rotVar(2,:);
+        
+        fprintf('R = [% 1.3f,% 1.3f,% 1.3f], using %4i scans, iteration = %i\n',rotVec(2,1),rotVec(2,2),rotVec(2,3),scansRange(s),w);
+        
+        save('Test_1_Res.mat', 'RErr', 'RVar', 'RErrEqual', 'TErrEqual', 'scansRange');
+    end
+end
 
+reps = 1;
+for w = 1:reps
+    for s = 1:size(scansRange1(:),1)
+%         sData = randTforms(sensorData, scansRange1(s));
+%         tranVec = roughT(sDataE, rotVec);
+%         TErrEqual(w,:,s) = tranVec(2,:);
+
+%       TODO: For each step we need the exact trajectory of Rotation SData_T to
+%       be used 
+%       sData = sData_T(s)???
+        
         %find translation, now using variances obtained from sensor readings
         tranVec = roughT(sData, rotVec);
         sData = findInT(sData, tranVec, rotVec);
@@ -130,22 +157,17 @@ for w = 1:reps
         tranVec = optT(sData, tranVec, rotVec);
 
         %bootstrap - line 10 in Algorithm 1
-        [tranVar, rotVar] = bootTform(sData, tranVec, rotVec, bootNum);
+        [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec, bootNum);
 
         %write out results
-        RErr(w,:,s) = rotVec(2,:);
+%         RErr(w,:,s) = rotVec(2,:);
         TErr(w,:,s) = tranVec(2,:);
-        RVar(w,:,s) = rotVar(2,:);
+%         RVar(w,:,s) = rotVar(2,:);
         TVar(w,:,s) = tranVar(2,:);
 
         fprintf('R = [% 1.3f,% 1.3f,% 1.3f], T = [% 3.2f,% 3.2f,% 3.2f] using %4i scans, iteration = %i\n',rotVec(2,1),rotVec(2,2),rotVec(2,3),tranVec(2,1),tranVec(2,2),tranVec(2,3),scansRange(s),w);
 
-<<<<<<< Updated upstream
-        save('Test_1_Res.mat', 'RErr', 'TErr', 'RVar', 'TVar', 'RErrEqual', 'TErrEqual','scansRange','scansRange1');
-=======
-        save('Test_1_Res.mat', 'RErr', 'TErr', 'RVar', 'TVar', 'RErrEqual', 'TErrEqual','scansRange');
-        %save('Test_1_Res.mat', 'RErr', 'TErr', 'RErrEqual', 'TErrEqual','scansRange');
->>>>>>> Stashed changes
+        save('Test_1_Res.mat', 'TErr', 'TVar','scansRange1', '-append');
     end
 end
         fprintf('Finish computing\n');

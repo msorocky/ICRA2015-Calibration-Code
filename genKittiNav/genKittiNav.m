@@ -69,6 +69,7 @@ for frame = 2:size(navData.files,1)
         plot3(T(1,4),T(2,4),T(3,4));
         drawnow;
     end
+    
 end 
 
 

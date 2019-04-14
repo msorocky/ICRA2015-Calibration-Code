@@ -8,7 +8,7 @@
 kittiPath = '/home/william/Desktop/MR/ICRA2015-Calibration-Code/rawData/';
 
 %Sets if the sensor transforms will be plotted
-plotTforms = false;
+plotTforms = true;
 
 %Setup folders
 addAll();

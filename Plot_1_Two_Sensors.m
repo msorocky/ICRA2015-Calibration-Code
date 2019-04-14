@@ -32,10 +32,10 @@ TErrEqual = reshape(TErrEqual,3,size(TErrEqual,3))';
 
 % deal with the variance 
 %
-RVar = mean(RVar,1);
-RVar = reshape(RVar,3,len)';  % change 
-TVar = mean(TVar,1);
-TVar = reshape(TVar,3,len1)';  % change 
+% RVar = mean(RVar,1);
+% RVar = reshape(RVar,3,len)';  % change 
+% TVar = mean(TVar,1);
+% TVar = reshape(TVar,3,len1)';  % change 
 
 %convert to angular error in degrees
 % for i = 1:len
@@ -68,7 +68,9 @@ figure
 hold on;
 
 subplot(3,1,1);
-boundedline(x,RErr(:,1),RVar(:,1),'o-r');
+% boundedline(x,RErr(:,1),RVar(:,1),'o-r');
+plot(x_T,RErr(:,1),'o-r');
+hold on
 plot(x,RErrEqual(:,1),'x-k');
 ylabel('Roll');
 axis([10 scansRange(len) 0 1]);
@@ -77,7 +79,9 @@ set(gcf,'color','w');
 grid on
 
 subplot(3,1,2);
-boundedline(x,RErr(:,2),RVar(:,2),'o-g');
+% boundedline(x,RErr(:,2),RVar(:,2),'o-g');
+plot(x_T,RErr(:,2),'o-g');
+hold on
 plot(x,RErrEqual(:,2),'x-k');
 ylabel('Pitch');
 axis([10 scansRange(len) 0 1]);
@@ -86,7 +90,9 @@ set(gcf,'color','w');
 grid on
 
 subplot(3,1,3);
-boundedline(x,RErr(:,3),RVar(:,3),'o-b');
+% boundedline(x,RErr(:,3),RVar(:,3),'o-b');
+plot(x_T,RErr(:,3),'o-b');
+hold on
 plot(x,RErrEqual(:,3),'x-k');
 ylabel('Yaw');
 xlabel('Number of Sensor Readings');
@@ -99,7 +105,9 @@ figure
 hold on;
 
 subplot(3,1,1);
-boundedline(x_T,TErr(:,1),TVar(:,1),'o-r');
+% boundedline(x_T,TErr(:,1),TVar(:,1),'o-r');
+plot(x_T,TErr(:,1),'o-r');
+hold on
 plot(x,TErrEqual(:,1),'x-k');
 ylabel('X');
 axis([10 scansRange(len) 0 1]);
@@ -108,7 +116,9 @@ set(gcf,'color','w');
 grid on
 
 subplot(3,1,2);
-boundedline(x_T,TErr(:,2),TVar(:,2),'o-g');
+% boundedline(x_T,TErr(:,2),TVar(:,2),'o-g');
+plot(x_T,TErr(:,2),'o-g');
+hold on
 plot(x,TErrEqual(:,2),'x-k');
 ylabel('Y');
 axis([10 scansRange(len) 0 1]);
@@ -117,7 +127,9 @@ set(gcf,'color','w');
 grid on
 
 subplot(3,1,3);
-boundedline(x_T,TErr(:,3),TVar(:,3),'o-b');
+% boundedline(x_T,TErr(:,3),TVar(:,3),'o-b');
+plot(x_T,TErr(:,3),'o-b');
+hold on
 plot(x,TErrEqual(:,3),'x-k');
 ylabel('Z');
 xlabel('Number of Sensor Readings');

@@ -81,8 +81,8 @@ for a = 1:s
                 err(k,:) = abs(err(k,:)) ./ sqrt(diag(V))'; 
             end
             
-            keep(any(err > 1,2)) = false;
-%             keep(any(err > 0.05,2)) = false;
+%             keep(any(err > 1,2)) = false;
+            keep(any(err > 0.145,2)) = false;
             
         end
     end

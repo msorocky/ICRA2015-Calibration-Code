@@ -7,14 +7,14 @@
 clear;
 clc;
 %data range (start excluded as not all sensors running)
-range = 10:1000;
+range = 10:1600;
 
 %number of scans to use
-scansRange = 10:50:800;
-scansRange1 = 10:50:800;
+scansRange = 10:100:1600;
+scansRange1 = 10:100:1600;
 
 %number of times to perform test
-reps = 1;
+reps = 25;
 
 %number of bootstrap iterations to perform
 bootNum = 100;
@@ -80,15 +80,15 @@ for i = 1:length(sensorData)
 end
 
 RErr = zeros(reps,3,size(scansRange(:),1));
-TErr = zeros(reps,3,size(scansRange1(:),1));
+TErr = zeros(reps,3,size(scansRange(:),1));
 
 RVar = zeros(reps,3,size(scansRange(:),1));
-TVar = zeros(reps,3,size(scansRange1(:),1));
+TVar = zeros(reps,3,size(scansRange(:),1));
 
 RErrEqual = zeros(reps,3,size(scansRange(:),1));
 TErrEqual = zeros(reps,3,size(scansRange(:),1));
 %TODO: Initialize SData_T
-% sData_T = [];
+sData_T = cell(2,1,size(scansRange(:),1),reps);
 for w = 1:reps
     for s = 1:size(scansRange(:),1)
         %get random contiguous scans to use
@@ -125,8 +125,8 @@ for w = 1:reps
         
         %bootstrap - line 10 in Algorithm 1
         [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec, bootNum);
-%         TODO: Store SData into sData_T so the exact same trajectory will be used for Translation
-%         sData_T = 
+%       TODO: Store SData into sData_T so the exact same trajectory will be used for Translation
+        sData_T(:,:,s,w) =  sData;
         
         RErr(w,:,s) = rotVec(2,:);
         RVar(w,:,s) = rotVar(2,:);
@@ -137,9 +137,9 @@ for w = 1:reps
     end
 end
 
-reps = 1;
+ 
 for w = 1:reps
-    for s = 1:size(scansRange1(:),1)
+    for s = 1:size(scansRange(:),1)
 %         sData = randTforms(sensorData, scansRange1(s));
 %         tranVec = roughT(sDataE, rotVec);
 %         TErrEqual(w,:,s) = tranVec(2,:);
@@ -147,7 +147,8 @@ for w = 1:reps
 %       TODO: For each step we need the exact trajectory of Rotation SData_T to
 %       be used 
 %       sData = sData_T(s)???
-        
+
+        sData = sData_T(:,:,s,w);
         %find translation, now using variances obtained from sensor readings
         tranVec = roughT(sData, rotVec);
         sData = findInT(sData, tranVec, rotVec);
@@ -157,7 +158,7 @@ for w = 1:reps
         tranVec = optT(sData, tranVec, rotVec);
 
         %bootstrap - line 10 in Algorithm 1
-        [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec, bootNum);
+ %       [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec, bootNum);
 
         %write out results
 %         RErr(w,:,s) = rotVec(2,:);
@@ -165,7 +166,7 @@ for w = 1:reps
 %         RVar(w,:,s) = rotVar(2,:);
         TVar(w,:,s) = tranVar(2,:);
 
-        fprintf('R = [% 1.3f,% 1.3f,% 1.3f], T = [% 3.2f,% 3.2f,% 3.2f] using %4i scans, iteration = %i\n',rotVec(2,1),rotVec(2,2),rotVec(2,3),tranVec(2,1),tranVec(2,2),tranVec(2,3),scansRange(s),w);
+        fprintf('T = [% 3.2f,% 3.2f,% 3.2f] using %4i scans, iteration = %i\n',tranVec(2,1),tranVec(2,2),tranVec(2,3),scansRange(s),w);
 
         save('Test_1_Res.mat', 'TErr', 'TVar','scansRange1', '-append');
     end

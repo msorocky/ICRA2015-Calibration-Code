@@ -36,12 +36,13 @@ end
 % Organize the data
 navTraj = navData.T_S1_Sk(1:11:end,:);
 velTraj = velData.T_S1_Sk;
-x_nav = navTraj(:,1);
+x_nav = -navTraj(:,1);
 y_nav = navTraj(:,2);
 z_nav = navTraj(:,3);
-x_vel = velTraj(:,1);
+x_vel = -velTraj(:,1);
 y_vel = velTraj(:,2);
 z_vel = velTraj(:,3);
+vel_x_y_z(:,1) = -vel_x_y_z(:,1);
 
 % Create the figure
 figure;
@@ -55,37 +56,37 @@ ylabel('y');
 zlabel('z');
 axis equal;
 grid on;
-legend('navTraj', 'velTraj Rotated', 'velTraj Original');
+legend('IMU Trajectory', 'Lidar Trajectory (Rotated)', 'Lidar Trajectory (Original)');
 
-figure;
-subplot(3,1,1);
-plot(vel_th1(:,1));
-hold on;
-plot(navTraj(:,4));
-hold on
-plot(velTraj(:,4));
-xlabel('Pose');
-ylabel('roll angle in rad');
-legend('vel aug','nav','vel original');
-
-subplot(3,1,2);
-plot(vel_th1(:,2));
-hold on;
-plot(navTraj(:,5));
-hold on
-plot(velTraj(:,5));
-xlabel('Pose');
-ylabel('pitch angle in rad');
-legend('vel aug','nav','vel original');
-
-subplot(3,1,3);
-plot(vel_th1(:,3));
-hold on;
-plot(navTraj(:,6));
-hold on
-plot(velTraj(:,6));
-xlabel('Pose');
-ylabel('yaw angle in rad');
-legend('vel aug','nav','vel original');
+% figure;
+% subplot(3,1,1);
+% plot(vel_th1(:,1));
+% hold on;
+% plot(navTraj(:,4));
+% hold on
+% plot(velTraj(:,4));
+% xlabel('Pose');
+% ylabel('roll angle in rad');
+% legend('vel aug','nav','vel original');
+% 
+% subplot(3,1,2);
+% plot(vel_th1(:,2));
+% hold on;
+% plot(navTraj(:,5));
+% hold on
+% plot(velTraj(:,5));
+% xlabel('Pose');
+% ylabel('pitch angle in rad');
+% legend('vel aug','nav','vel original');
+% 
+% subplot(3,1,3);
+% plot(vel_th1(:,3));
+% hold on;
+% plot(navTraj(:,6));
+% hold on
+% plot(velTraj(:,6));
+% xlabel('Pose');
+% ylabel('yaw angle in rad');
+% legend('vel aug','nav','vel original');
 
 

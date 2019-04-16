@@ -79,6 +79,8 @@ for i = 1:length(sensorData)
     end
 end
 
+save('matched_traj.mat', 'sensorData')
+
 RErr = zeros(reps,3,size(scansRange(:),1));
 TErr = zeros(reps,3,size(scansRange(:),1));
 

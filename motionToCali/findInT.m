@@ -7,6 +7,9 @@ for i = 1:size(RMat,3)
     RMat(:,:,i) = vec2rot(rotVec(i,:)');
 end
 
+R_Vel2IMU=RMat(:,:,2);
+R=R_Vel2IMU';  % R is IMU to Vel
+
 %get matrix form of transformations
 tformMat = cell(size(sensorData));
 for i = 1:size(sensorData,1)
@@ -21,11 +24,19 @@ end
 
 %find points to keep
 keep = true(size(sensorData{1}.T_Skm1_Sk,1),1);
-for i = 2:size(sensorData,1)
+for i = 2:size(sensorData,1)      % i=2
     %k = 0;
-    k = rejectProbT_new( {sensorData{1};sensorData{i}}, {tformMat{1};tformMat{i}}, tranVec(i,:), RMat(:,:,[1,i]) );
-    keep = and(keep,k);
+    [k_xy,k_z] = rejectProbT_new( {sensorData{1};sensorData{i}}, tranVec(i,:), R );
+    keep = and(keep,k_xy);
+
 end
+
+     for i=2:size(sensorData{1}.T_Skm1_Sk,1)
+        if k_z(i) == false
+           sensorData{1}.T_Skm1_Sk(i,3)=sensorData{1}.T_Skm1_Sk(i-1,3);
+           sensorData{2}.T_Skm1_Sk(i,3)=sensorData{2}.T_Skm1_Sk(i-1,3);
+        end
+     end
 
 %remove points with large errors
 for i = 1:size(sensorData,1)

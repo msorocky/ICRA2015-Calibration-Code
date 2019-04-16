@@ -1,3 +1,4 @@
+%% The results is: IMU to Vel, treated Vel as the base
 clc;
 load('Test_1_Res.mat');
 
@@ -8,11 +9,11 @@ len=length(scansRange);
 len1=length(scansRange1);
 % groundtruth IMU to Vel
 actualT = [0.000, 0.046, 0.399];
-actualR = [0.000, 0.000, 1.571];
+% actualR = [0.000, 0.000, 1.571];      % correct Vel to IMU
 % 
 % groundtruth Vel to IMU
 % actualT = [-0.046, 0.000, -0.399];
-% actualR = [-0.000, -0.000, -1.571];
+actualR = [-0.000, -0.000, -1.571];     % correct IMU to Vel
 
 RErr = RErr - repmat(actualR,[size(RErr,1),1,size(RErr,3)]);
 RErrEqual = RErrEqual - repmat(actualR,[size(RErrEqual,1),1,size(RErrEqual,3)]);

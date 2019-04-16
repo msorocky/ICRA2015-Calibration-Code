@@ -10,8 +10,8 @@ clc;
 range = 10:1600;
 
 %number of scans to use
-scansRange = 10:100:1600;
-scansRange1 = 10:100:1600;
+scansRange = 10:100:1500;
+scansRange1 = 10:100:1500;
 
 %number of times to perform test
 reps = 1;
@@ -39,8 +39,10 @@ load('zeusNavData.mat');
 sensorData{tformIdx,1} = navData;
 tformIdx = tformIdx + 1;
 
-%% find transformations
 
+sensorData{1}.T_Skm1_Sk(:,3)=sensorData{1}.T_Skm1_Sk(:,3)*20;
+sensorData{2}.T_Skm1_Sk(:,3)=sensorData{2}.T_Skm1_Sk(:,3)*20;
+%% find transformations
 for i = 1:length(sensorData)
     if(i > 1)
         % This interpolates transforms from sensor A to match times of
@@ -107,7 +109,10 @@ for w = 1:reps
 %       TODO: Store SData into sData_T so the exact same trajectory will be used for Translation
         sData_T(:,:,s,w) =  sData;
         
-        RErr(w,:,s) = rotVec(2,:);
+        r_Vel2IMU = vec2rot(rotVec(2,:)');
+        r_IMU2Vel = r_Vel2IMU';
+        
+        RErr(w,:,s) = rot2vec(r_IMU2Vel);
         RVar(w,:,s) = rotVar(2,:);
         
         fprintf('R = [% 1.3f,% 1.3f,% 1.3f], using %4i scans, iteration = %i\n',rotVec(2,1),rotVec(2,2),rotVec(2,3),scansRange(s),w);
@@ -128,11 +133,11 @@ for w = 1:reps
         sData = sData_T(:,:,s,w);
         %find translation, now using variances obtained from sensor readings
         tranVec = roughT_new(sData, rotVec);
-        % sData = findInT(sData, tranVec, rotVec);
+         sData = findInT(sData, tranVec, rotVec);
         
         % Refines initial guess of tranVec - this would be line 7 of
         % Algorithm 1
-        % tranVec = optT(sData, tranVec, rotVec);
+         tranVec = optT(sData, tranVec, rotVec);
 
         %bootstrap - line 10 in Algorithm 1
         [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec, bootNum);

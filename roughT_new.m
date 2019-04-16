@@ -11,7 +11,7 @@ t_i = sensorData{2}.T_Skm1_Sk(:, 1:3)';
 % r_i = sensorData{2}.T_Skm1_Sk(:, 4:6);
 
 t_v_iv = zeros(3,size(t_i,2));
-% Rotation matrix from IMU to Vel
+% Rotation matrix from  (Vel to IMU)
 RMat = zeros(3,3,size(sensorData,1));
 for j = 1:size(RMat,3)                    % j = 2
     RMat(:,:,j) = vec2rot(rotVec(j,:)');

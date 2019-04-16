@@ -54,7 +54,7 @@ function [ keep_xy, keep_z] = rejectProbT_new( sensorData, estVec, R )
       err_z = err(:,3);
       
       keep_xy(any(err_xy > 1, 2)) = false;
-      keep_z(any(err_z > 0.08 ,2)) = false;
+      keep_z(any(err_z > 0.1 ,2)) = false;
       
 %            keep(any(err > 0.01,2)) = false;
 end 

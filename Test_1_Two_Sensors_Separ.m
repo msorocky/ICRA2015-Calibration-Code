@@ -89,30 +89,38 @@ for w = 1:reps
         end
         % Give a coarse estimate of R and T using sensor data sDataE
         % (weighting variances equally) - lines 5, 8 in Algorithm 1
-        rotVec = roughR(sDataE);
+        rotVec_E = roughR(sDataE);
+        
+        r_Vel2IMU_E = vec2rot(rotVec_E(2,:)');
+        r_IMU2Vel_E = r_Vel2IMU_E';
+        rotVec_E = rot2vec(r_IMU2Vel_E);
+        rotVec_E = [[0 0 0];rotVec_E'];
         
         %write out results
-        RErrEqual(w,:,s) = rotVec(2,:);
+        RErrEqual(w,:,s) = rotVec_E(2,:);
 
         %find rotation, now using variances previously obtained from sensor readings
         rotVec = roughR(sData);
         sData = findInR(sData, rotVec);
         % Refines initial guess of rotVec - this would be line 7 of
         % Algorithm 1
-        rotVec = optR(sData, rotVec);
+        rotVec_F = optR(sData, rotVec);
         
-        tranVec = roughT_new(sDataE, rotVec);
+        r_Vel2IMU_F = vec2rot(rotVec_F(2,:)');
+        r_IMU2Vel_F = r_Vel2IMU_F';
+        rotVec = rot2vec(r_IMU2Vel_F);
+        rotVec = [[0 0 0];rotVec'];
+        
+        tranVec = roughT_new(sDataE, rotVec_F);
         TErrEqual(w,:,s) = tranVec(2,:);
         
         %bootstrap - line 10 in Algorithm 1
-        [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec, bootNum);
+        [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec_F, bootNum);
 %       TODO: Store SData into sData_T so the exact same trajectory will be used for Translation
         sData_T(:,:,s,w) =  sData;
         
-        r_Vel2IMU = vec2rot(rotVec(2,:)');
-        r_IMU2Vel = r_Vel2IMU';
         
-        RErr(w,:,s) = rot2vec(r_IMU2Vel);
+        RErr(w,:,s) = rotVec(2,:);
         RVar(w,:,s) = rotVar(2,:);
         
         fprintf('R = [% 1.3f,% 1.3f,% 1.3f], using %4i scans, iteration = %i\n',rotVec(2,1),rotVec(2,2),rotVec(2,3),scansRange(s),w);
@@ -130,22 +138,27 @@ for w = 1:reps
 
 %       TODO: For each step we need the exact trajectory of Rotation SData_T to
 %       be used 
+
         sData = sData_T(:,:,s,w);
+        
+%         r_Vel2IMU = vec2rot(rotVec(2,:)');
+%         r_IMU2Vel = r_Vel2IMU';
+%         rotVec = rot2vec(r_IMU2Vel);
         %find translation, now using variances obtained from sensor readings
-        tranVec = roughT_new(sData, rotVec);
-         sData = findInT(sData, tranVec, rotVec);
+        tranVec = roughT_new(sData, rotVec_F);
+         sData = findInT(sData, tranVec, rotVec_F);
         
         % Refines initial guess of tranVec - this would be line 7 of
         % Algorithm 1
-         tranVec = optT(sData, tranVec, rotVec);
+         tranVec = optT(sData, tranVec, rotVec_F);
 
         %bootstrap - line 10 in Algorithm 1
-        [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec, bootNum);
+        [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec_F, bootNum);
 
         %write out results
-        RErr(w,:,s) = rotVec(2,:);
+%         RErr(w,:,s) = rotVec(2,:);
         TErr(w,:,s) = tranVec(2,:);
-        RVar(w,:,s) = rotVar(2,:);
+%         RVar(w,:,s) = rotVar(2,:);
         TVar(w,:,s) = tranVar(2,:);
 
         fprintf('T = [% 3.2f,% 3.2f,% 3.2f] using %4i scans, iteration = %i\n',tranVec(2,1),tranVec(2,2),tranVec(2,3),scansRange(s),w);

@@ -22,8 +22,8 @@ end
 %find points to keep
 keep = true(size(sensorData{1}.T_Skm1_Sk,1),1);
 for i = 2:size(sensorData,1)
-    k = 0;
-    %k = rejectProbT( {sensorData{1};sensorData{i}}, {tformMat{1};tformMat{i}}, tranVec(i,:), RMat(:,:,[1,i]) );
+    %k = 0;
+    k = rejectProbT_new( {sensorData{1};sensorData{i}}, {tformMat{1};tformMat{i}}, tranVec(i,:), RMat(:,:,[1,i]) );
     keep = and(keep,k);
 end
 

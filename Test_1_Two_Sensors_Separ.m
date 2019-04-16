@@ -14,7 +14,7 @@ scansRange = 10:100:1600;
 scansRange1 = 10:100:1600;
 
 %number of times to perform test
-reps = 2;
+reps = 1;
 
 %number of bootstrap iterations to perform
 bootNum = 100;
@@ -38,23 +38,6 @@ tformIdx = tformIdx + 1;
 load('zeusNavData.mat');
 sensorData{tformIdx,1} = navData;
 tformIdx = tformIdx + 1;
-
-%% process cameras
-% load('kittiCam1Data.mat');
-% sensorData{tformIdx,1} = cam1Data;
-% tformIdx = tformIdx + 1;
-
-% load('kittiCam2Data.mat');
-% sensorData{tformIdx,1} = cam2Data;
-% tformIdx = tformIdx + 1;
-% 
-% load('kittiCam3Data.mat');
-% sensorData{tformIdx} = cam3Data;
-% tformIdx = tformIdx + 1;
-% 
-% load('kittiCam4Data.mat');
-% sensorData{tformIdx} = cam4Data;
-% tformIdx = tformIdx + 1;
 
 %% find transformations
 
@@ -91,9 +74,7 @@ TErrEqual = zeros(reps,3,size(scansRange(:),1));
 sData_T = cell(2,1,size(scansRange(:),1),reps);
 for w = 1:reps
     for s = 1:size(scansRange(:),1)
-        %get random contiguous scans to use
-        % scansRange = [10 20 30 40 50] (defined at top of file)
-        
+        % get random contiguous scans to use
         % randTforms(sensorData, n) returns n sequential transforms and
         % their variances, randomly from sensorData 
         % I.e. at each repetition, we'd have n transforms to use
@@ -104,12 +85,10 @@ for w = 1:reps
         for i = 1:size(sData,1)
             sDataE{i}.T_Cov_Skm1_Sk = ones(size(sData{1}.T_Cov_Skm1_Sk));
         end
-
         % Give a coarse estimate of R and T using sensor data sDataE
         % (weighting variances equally) - lines 5, 8 in Algorithm 1
         rotVec = roughR(sDataE);
         
-
         %write out results
         RErrEqual(w,:,s) = rotVec(2,:);
 
@@ -120,7 +99,7 @@ for w = 1:reps
         % Algorithm 1
         rotVec = optR(sData, rotVec);
         
-        tranVec = roughT(sDataE, rotVec);
+        tranVec = roughT_new(sDataE, rotVec);
         TErrEqual(w,:,s) = tranVec(2,:);
         
         %bootstrap - line 10 in Algorithm 1
@@ -139,26 +118,24 @@ end
 
  
 for w = 1:reps
-    for s = 1:size(scansRange(:),1)
+    for s = 1:size(scansRange1(:),1)
 %         sData = randTforms(sensorData, scansRange1(s));
 %         tranVec = roughT(sDataE, rotVec);
 %         TErrEqual(w,:,s) = tranVec(2,:);
 
 %       TODO: For each step we need the exact trajectory of Rotation SData_T to
 %       be used 
-%       sData = sData_T(s)???
-
         sData = sData_T(:,:,s,w);
         %find translation, now using variances obtained from sensor readings
-        tranVec = roughT(sData, rotVec);
-        sData = findInT(sData, tranVec, rotVec);
+        tranVec = roughT_new(sData, rotVec);
+        % sData = findInT(sData, tranVec, rotVec);
         
         % Refines initial guess of tranVec - this would be line 7 of
         % Algorithm 1
-        tranVec = optT(sData, tranVec, rotVec);
+%         tranVec = optT(sData, tranVec, rotVec);
 
         %bootstrap - line 10 in Algorithm 1
- %       [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec, bootNum);
+%       [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec, bootNum);
 
         %write out results
 %         RErr(w,:,s) = rotVec(2,:);

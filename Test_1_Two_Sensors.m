@@ -107,7 +107,7 @@ for w = 1:reps
         % (weighting variances equally) - lines 5, 8 in Algorithm 1
         rotVec = roughR(sDataE); 
 
-        tranVec = roughT(sDataE, rotVec);
+        tranVec = roughT_new(sDataE, rotVec);
 
         %write out results
         RErrEqual(w,:,s) = rotVec(2,:);
@@ -122,12 +122,12 @@ for w = 1:reps
         rotVec = optR(sData, rotVec); 
 
         %find translation, now using variances obtained from sensor readings
-        tranVec = roughT(sData, rotVec);
-        sData = findInT(sData, tranVec, rotVec);
+        tranVec = roughT_new(sData, rotVec);
+%         sData = findInT(sData, tranVec, rotVec);
         
         % Refines initial guess of tranVec - this would be line 7 of
         % Algorithm 1
-        tranVec = optT(sData, tranVec, rotVec);
+%         tranVec = optT(sData, tranVec, rotVec);
 
         %bootstrap - line 10 in Algorithm 1
 %       [tranVar, rotVar] = bootTform(sData, tranVec, rotVec, bootNum);

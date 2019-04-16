@@ -9,7 +9,7 @@ len1=length(scansRange1);
 % groundtruth IMU to Vel
 actualT = [0.000, 0.046, 0.399];
 actualR = [0.000, 0.000, 1.571];
-
+% 
 % groundtruth Vel to IMU
 % actualT = [-0.046, 0.000, -0.399];
 % actualR = [-0.000, -0.000, -1.571];
@@ -110,7 +110,7 @@ plot(x_T,TErr(:,1),'o-r');
 hold on
 plot(x,TErrEqual(:,1),'x-k');
 ylabel('X');
-axis([10 scansRange(len) 0 1]);
+axis([10 scansRange1(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
 grid on
@@ -121,7 +121,7 @@ plot(x_T,TErr(:,2),'o-g');
 hold on
 plot(x,TErrEqual(:,2),'x-k');
 ylabel('Y');
-axis([10 scansRange(len) 0 1]);
+axis([10 scansRange1(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
 grid on
@@ -133,7 +133,7 @@ hold on
 plot(x,TErrEqual(:,3),'x-k');
 ylabel('Z');
 xlabel('Number of Sensor Readings');
-axis([10 scansRange(len) 0 1]);
+axis([10 scansRange1(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
 grid on

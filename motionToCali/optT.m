@@ -22,7 +22,7 @@ end
 %refine translation estimate and record result
 options = optimset('MaxFunEvals',100000,'MaxIter',5000);
 estVec = estVec(2:end,1:3);
-tranVec = fminsearch(@(estVec) systemProbT( sensorData, tformMat, estVec, RMat),estVec, options);
+tranVec = fminsearch(@(estVec) systemProbT_new( sensorData, tformMat, estVec, RMat),estVec, options);
 tranVec = [0,0,0;tranVec];
 end
 

@@ -1,4 +1,4 @@
-function [ prob ] = systemProbT_new( sensorData, tformMat, estVec, R )
+function [ prob ] = systemProbT_new( sensorData, tfo rmMat, estVec, R )
 %ROTSYS2VEC Summary of this funcit(i,on goes here
 %   Detailed explanait(i,on goes here
 
@@ -13,7 +13,7 @@ function [ prob ] = systemProbT_new( sensorData, tformMat, estVec, R )
       Tb = [R(:,:,b),estVec(b,:)';[0,0,0,1]];
       Tab = Tb/Ta;
             
-      Rab = Tab(1:3,1:3);
+      Rab = Tab(1:3,1:3);    %%%%
       temp = Tab(1:3,4);
             
       VA = sensorData{a}.T_Cov_Skm1_Sk(:,1:3)';

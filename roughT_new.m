@@ -5,10 +5,10 @@ estVecT = zeros(size(sensorData,1),3);
 % Vel is 1, IMU is 2 
 % Vel
 t_v = sensorData{1}.T_Skm1_Sk(:, 1:3)';
-r_v = sensorData{1}.T_Skm1_Sk(:, 4:6);
+% r_v = sensorData{1}.T_Skm1_Sk(:, 4:6);
 % IMU
 t_i = sensorData{2}.T_Skm1_Sk(:, 1:3)';
-r_i = sensorData{2}.T_Skm1_Sk(:, 4:6);
+% r_i = sensorData{2}.T_Skm1_Sk(:, 4:6);
 
 t_v_iv = zeros(3,size(t_i,2));
 % Rotation matrix from IMU to Vel
@@ -27,9 +27,12 @@ for i = 1:size(sensorData{1}.T_Skm1_Sk,1)
                                sensorData{2}.T_Cov_Skm1_Sk(i,1:3).^2);
 end
 
-t_v_iv = t_v_iv.*weight';
+sum_w = sum(weight,1); 
+w = weight./sum_w;      % small covariance -> big weight 
 
-estVecT(2,:) = sum(t_v_iv,2)./sum(weight,1)';
+t_v_iv = t_v_iv.*w';
+
+estVecT(2,:) = sum(t_v_iv,2)./sum(w,1)';
 
 
 end

@@ -132,15 +132,15 @@ for w = 1:reps
         
         % Refines initial guess of tranVec - this would be line 7 of
         % Algorithm 1
-%         tranVec = optT(sData, tranVec, rotVec);
+        % tranVec = optT(sData, tranVec, rotVec);
 
         %bootstrap - line 10 in Algorithm 1
-%       [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec, bootNum);
+        [tranVar, rotVar, weight] = bootTform(sData, tranVec, rotVec, bootNum);
 
         %write out results
-%         RErr(w,:,s) = rotVec(2,:);
+        RErr(w,:,s) = rotVec(2,:);
         TErr(w,:,s) = tranVec(2,:);
-%         RVar(w,:,s) = rotVar(2,:);
+        RVar(w,:,s) = rotVar(2,:);
         TVar(w,:,s) = tranVar(2,:);
 
         fprintf('T = [% 3.2f,% 3.2f,% 3.2f] using %4i scans, iteration = %i\n',tranVec(2,1),tranVec(2,2),tranVec(2,3),scansRange(s),w);

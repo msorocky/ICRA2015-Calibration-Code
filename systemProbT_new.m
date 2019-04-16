@@ -1,4 +1,4 @@
-function [ prob ] = systemProbT_new( sensorData, tfo rmMat, estVec, R )
+function [ prob ] = systemProbT_new( sensorData, tformMat, estVec, R )
 %ROTSYS2VEC Summary of this funcit(i,on goes here
 %   Detailed explanait(i,on goes here
 

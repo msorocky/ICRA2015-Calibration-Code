@@ -27,9 +27,9 @@ for i = 1:size(sensorData{1}.T_Skm1_Sk,1)
                                sensorData{2}.T_Cov_Skm1_Sk(i,1:3).^2);
 end
 
-sum_w = sum(weight,1); 
-w = weight./sum_w;      % small covariance -> big weight 
-
+% sum_w = sum(weight,1); 
+% w = weight./sum_w;      % small covariance -> big weight 
+w=1./weight;
 t_v_iv = t_v_iv.*w';
 
 estVecT(2,:) = sum(t_v_iv,2)./sum(w,1)';

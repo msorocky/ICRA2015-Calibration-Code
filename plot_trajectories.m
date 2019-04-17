@@ -2,6 +2,8 @@
 clear;
 close all;
 
+compute_calibration;
+
 % Load the trajectory data
 % load('zeusNavData.mat');
 % load('zeusVelData.mat');
@@ -73,6 +75,20 @@ x_vel = -velTraj(:,1);
 y_vel = velTraj(:,2);
 z_vel = velTraj(:,3);
 vel_rotated(:,1) = -vel_rotated(:,1);
+
+% Create the figure
+figure;
+plot3(x_nav,y_nav,z_nav);
+hold on;
+plot3(vel_rotated(:,1),vel_rotated(:,2),vel_rotated(:,3));
+hold on;
+plot3(x_vel,y_vel,z_vel);
+xlabel('x');
+ylabel('y');
+zlabel('z');
+axis equal;
+grid on;
+legend('IMU Trajectory', 'Lidar Trajectory (Rotated)', 'Lidar Trajectory (Original)');
 
 % Create the figure
 figure;

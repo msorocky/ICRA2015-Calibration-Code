@@ -1,6 +1,6 @@
 %% The results is: IMU to Vel, treated Vel as the base
 clc;
-load('Test_1_Res.mat');
+load('repeat_1.mat');
 
 % addAll();
 close all;
@@ -67,76 +67,85 @@ addpath('./plotBounds');
 close all
 figure
 hold on;
-
+title('Error in roll, pitch and yaw','Interpreter','latex','Fontsize',16)
 subplot(3,1,1);
 boundedline(x,RErr(:,1),RVar(:,1),'o-r');
 % plot(x_T,RErr(:,1),'o-r');
 hold on
 plot(x,RErrEqual(:,1),'x-k');
-ylabel('Roll');
+ylabel('Roll[rad]','Interpreter','latex','Fontsize',15);
 axis([10 scansRange(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
 grid on
+legend({'variance' 'method' 'weighted least square'},'Interpreter','latex','Fontsize',13)
 
 subplot(3,1,2);
 boundedline(x,RErr(:,2),RVar(:,2),'o-g');
 % plot(x_T,RErr(:,2),'o-g');
 hold on
 plot(x,RErrEqual(:,2),'x-k');
-ylabel('Pitch');
+ylabel('Pitch[rad]','Interpreter','latex','Fontsize',15);
 axis([10 scansRange(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
 grid on
+legend({'variance' 'method' 'weighted least square'},'Interpreter','latex','Fontsize',13)
 
 subplot(3,1,3);
 boundedline(x,RErr(:,3),RVar(:,3),'o-b');
 % plot(x_T,RErr(:,3),'o-b');
 hold on
 plot(x,RErrEqual(:,3),'x-k');
-ylabel('Yaw');
-xlabel('Number of Sensor Readings');
+ylabel('Yaw[rad]','Interpreter','latex','Fontsize',15);
 axis([10 scansRange(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
 grid on 
+xlabel('Number of Sensor Readings','Interpreter','latex','Fontsize',15)
+% ylabel('$x_2$','Interpreter','latex','Fontsize',24)
+legend({'variance' 'method' 'weighted least square'},'Interpreter','latex','Fontsize',13)
+
+
 
 figure
 hold on;
+title('Error in X, Y and Z','Interpreter','latex','Fontsize',16)
 
 subplot(3,1,1);
 boundedline(x_T,TErr(:,1),TVar(:,1),'o-r');
 % plot(x_T,TErr(:,1),'o-r');
 hold on
 plot(x,TErrEqual(:,1),'x-k');
-ylabel('X');
+ylabel('X[m]','Interpreter','latex','Fontsize',15);
 axis([10 scansRange1(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
 grid on
+legend({'variance' 'method' 'weighted least square'},'Interpreter','latex','Fontsize',13)
 
 subplot(3,1,2);
 boundedline(x_T,TErr(:,2),TVar(:,2),'o-g');
 % plot(x_T,TErr(:,2),'o-g');
 hold on
 plot(x,TErrEqual(:,2),'x-k');
-ylabel('Y');
+ylabel('Y[m]','Interpreter','latex','Fontsize',15);
 axis([10 scansRange1(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
 grid on
-
+legend({'variance' 'method' 'weighted least square'},'Interpreter','latex','Fontsize',13)
 subplot(3,1,3);
 boundedline(x_T,TErr(:,3),TVar(:,3),'o-b');
 % plot(x_T,TErr(:,3),'o-b');
 hold on
 plot(x,TErrEqual(:,3),'x-k');
-ylabel('Z');
-xlabel('Number of Sensor Readings');
+ylabel('Z[m]','Interpreter','latex','Fontsize',15);
+xlabel('Number of Sensor Readings','Interpreter','latex','Fontsize',15)
 axis([10 scansRange1(len) 0 1]);
 set(gca,'layer','top');
 set(gcf,'color','w');
 grid on
+legend({'variance' 'method' 'weighted least square'},'Interpreter','latex','Fontsize',13)
 
 

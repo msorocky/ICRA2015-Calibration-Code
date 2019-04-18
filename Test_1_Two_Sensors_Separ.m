@@ -3,7 +3,7 @@
 % 28 of the kitti data set using the presented method and a simple equal
 % weighted least squares method
 
-%% user set variables
+% user set variables
 clear;
 clc;
 %data range (start excluded as not all sensors running)
@@ -19,30 +19,30 @@ reps = 1;
 %number of bootstrap iterations to perform
 bootNum = 100;
 
-%% setup folders
+% setup folders
 addAll();
 
-%% clear previous data
+% clear previous data
 tformIdx = 1;
 clear tform;
 clear tformVar;
 clear sensorType;
 clear sensorData;
 
-%% process velodyne
+% process velodyne
 load('zeusVelData.mat');          % data obtained from genKittiVel/genKittiVel.m
 sensorData{tformIdx,1} = velData; % This would be line 2 in the paper's Algorithm 1 
 tformIdx = tformIdx + 1;
 
-%% process nav
+% process nav
 load('zeusNavData.mat');
 sensorData{tformIdx,1} = navData;
 tformIdx = tformIdx + 1;
 
 
-sensorData{1}.T_Skm1_Sk(:,3)=sensorData{1}.T_Skm1_Sk(:,3)*20;
-sensorData{2}.T_Skm1_Sk(:,3)=sensorData{2}.T_Skm1_Sk(:,3)*20;
-%% find transformations
+% sensorData{1}.T_Skm1_Sk(:,3)=sensorData{1}.T_Skm1_Sk(:,3)*20;
+% sensorData{2}.T_Skm1_Sk(:,3)=sensorData{2}.T_Skm1_Sk(:,3)*20;
+% find transformations
 for i = 1:length(sensorData)
     if(i > 1)
         % This interpolates transforms from sensor A to match times of
@@ -125,7 +125,7 @@ for w = 1:reps
         
         fprintf('R = [% 1.3f,% 1.3f,% 1.3f], using %4i scans, iteration = %i\n',rotVec(2,1),rotVec(2,2),rotVec(2,3),scansRange(s),w);
         
-        save('Test_1_Res.mat', 'RErr', 'RVar', 'RErrEqual', 'TErrEqual', 'scansRange');
+        save('repeat_1.mat', 'RErr', 'RVar', 'RErrEqual', 'TErrEqual', 'scansRange');
     end
 end
 
@@ -163,7 +163,7 @@ for w = 1:reps
 
         fprintf('T = [% 3.2f,% 3.2f,% 3.2f] using %4i scans, iteration = %i\n',tranVec(2,1),tranVec(2,2),tranVec(2,3),scansRange(s),w);
 
-        save('Test_1_Res.mat', 'TErr', 'TVar','scansRange1', '-append');
+        save('repeat_1.mat', 'TErr', 'TVar','scansRange1', '-append');
     end
 end
         fprintf('Finish computing\n');
